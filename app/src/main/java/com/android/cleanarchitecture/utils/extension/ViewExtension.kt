@@ -1,4 +1,4 @@
-package com.android.cleanarchitecture.util.extension
+package com.android.cleanarchitecture.utils.extension
 
 import android.content.Context
 import android.widget.Toast

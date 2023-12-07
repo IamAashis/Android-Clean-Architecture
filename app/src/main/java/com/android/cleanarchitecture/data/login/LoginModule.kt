@@ -32,9 +32,9 @@ class LoginModule {
         return LoginRepositoryImpl(loginApi)
     }
 
-    @Singleton
+   /* @Singleton
     @Provides
     fun provideQuotesRepository(apiService: ApiService): RandomQuotesRepository {
         return RandomQuotesRepositoryImpl(apiService)
-    }
+    }*/
 }

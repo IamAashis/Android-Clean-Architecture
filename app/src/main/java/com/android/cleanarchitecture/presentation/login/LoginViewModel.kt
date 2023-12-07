@@ -6,10 +6,9 @@ import com.android.cleanarchitecture.R
 import com.android.cleanarchitecture.data.common.utils.WrappedResponse
 import com.android.cleanarchitecture.data.login.remote.dto.LoginRequest
 import com.android.cleanarchitecture.data.login.remote.dto.LoginResponse
-import com.android.cleanarchitecture.domain.base.BaseResult
 import com.android.cleanarchitecture.domain.login.model.LoginEntity
 import com.android.cleanarchitecture.domain.login.usecase.LoginUseCase
-import com.android.cleanarchitecture.util.extension.isEmail
+import com.android.cleanarchitecture.utils.extension.isEmail
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

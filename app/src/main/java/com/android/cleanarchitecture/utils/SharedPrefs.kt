@@ -1,4 +1,4 @@
-package com.android.cleanarchitecture.util
+package com.android.cleanarchitecture.utils
 
 import android.content.Context
 import android.content.SharedPreferences

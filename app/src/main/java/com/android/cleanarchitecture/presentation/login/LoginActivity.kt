@@ -7,11 +7,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.android.cleanarchitecture.data.common.utils.WrappedResponse
+import com.android.cleanarchitecture.data.login.remote.dto.LoginRequest
 import com.android.cleanarchitecture.data.login.remote.dto.LoginResponse
 import com.android.cleanarchitecture.databinding.ActivityLoginBinding
 import com.android.cleanarchitecture.domain.login.model.LoginEntity
-import com.android.cleanarchitecture.util.extension.showAlertDialog
-import com.android.cleanarchitecture.util.extension.showToast
+import com.android.cleanarchitecture.utils.extension.showAlertDialog
+import com.android.cleanarchitecture.utils.extension.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -75,7 +76,7 @@ class LoginActivity : AppCompatActivity() {
             val email = binding.emailEditText.text.toString().trim()
             val password = binding.passwordEditText.text.toString().trim()
 
-//            viewModel.login(LoginRequest(email = email, password = password))
+            viewModel.login(LoginRequest(email = email, password = password))
         }
     }
 }

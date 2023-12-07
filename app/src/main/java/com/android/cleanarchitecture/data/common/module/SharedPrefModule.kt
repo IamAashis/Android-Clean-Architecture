@@ -1,7 +1,7 @@
 package com.android.cleanarchitecture.data.common.module
 
 import android.content.Context
-import com.android.cleanarchitecture.util.SharedPrefs
+import com.android.cleanarchitecture.utils.SharedPrefs
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

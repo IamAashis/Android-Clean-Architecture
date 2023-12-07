@@ -4,4 +4,16 @@
     <string name="error_password_not_valid">Password is not valid</string>
     <string name="author_name">- %s</string>
     <string name="quotes">"%s"</string>
+    <string name="sign_in">Sign In</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="login_to_your_account">Login to your account.</string>
+    <string name="error_no_wifi">No internet</string>
+    <string name="error_no_wifi_description">Please check your internet connection and try again.</string>
+    <string name="session_expired_description">Oops! Your session has expired. Please, login again to continue.</string>
+    <string name="error_default">Something went wrong, Please try again!</string>
+    <string name="session_expired">Session Expired</string>
+    <string name="error">Error</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>

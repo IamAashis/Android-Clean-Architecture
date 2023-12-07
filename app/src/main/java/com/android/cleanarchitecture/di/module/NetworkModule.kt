@@ -2,7 +2,7 @@ package com.android.cleanarchitecture.di.module
 
 import android.content.Context
 import com.android.cleanarchitecture.data.common.utils.extensions.RequestInterceptor
-import com.android.cleanarchitecture.util.SharedPrefs
+import com.android.cleanarchitecture.utils.SharedPrefs
 import com.chuckerteam.chucker.api.ChuckerCollector
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import dagger.Module

@@ -1,10 +1,10 @@
 package com.android.cleanarchitecture.presentation.quotes
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.cleanarchitecture.data.randomQuotes.model.RandomQuotesResponse
-import com.android.cleanarchitecture.domain.base.BaseResult
+import com.android.cleanarchitecture.domain.base.BaseResponse
 import com.android.cleanarchitecture.domain.randomQuotes.usecase.RandomQuotesUseCase
+import com.android.cleanarchitecture.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,7 +18,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class QuotesViewModel @Inject constructor(private val randomQuotesUseCase: RandomQuotesUseCase) :
-    ViewModel() {
+    BaseViewModel() {
 
     private val state = MutableStateFlow<QuotesActivityState>(QuotesActivityState.Init)
     val mState: StateFlow<QuotesActivityState> get() = state
@@ -43,26 +43,29 @@ class QuotesViewModel @Inject constructor(private val randomQuotesUseCase: Rando
                 }.catch {
                     showToast(it.message.toString())
                     hideLoading()
+
                 }.collect { response ->
                     hideLoading()
                     when (response) {
-                        is BaseResult.Error -> state.value =
-                            QuotesActivityState.ShowError(response.rawResponse)
+                        is BaseResponse.Error -> performActionOnException(response.throwable) {}
+//                         state.value =   QuotesActivityState.ShowError(response.data)
 
-                        is BaseResult.SuccessList -> state.value =
+                        is BaseResponse.Success -> state.value =
                             QuotesActivityState.ResponseData(response.data?.get(0))
 
-                        else -> {}
+                        else -> {
+                        }
                     }
                 }
         }
     }
 }
+
 //use State Flow + sealed class due to cleaner when defining state and safety.
 sealed class QuotesActivityState {
     object Init : QuotesActivityState()
     data class IsLoading(val isLoading: Boolean) : QuotesActivityState()
     data class ShowToast(val message: String) : QuotesActivityState()
-    data class ShowError(val message: Any) : QuotesActivityState()
+    data class ShowError(val message: List<RandomQuotesResponse>?) : QuotesActivityState()
     data class ResponseData(val response: RandomQuotesResponse?) : QuotesActivityState()
 }

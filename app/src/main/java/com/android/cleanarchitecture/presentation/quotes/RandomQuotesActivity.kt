@@ -1,6 +1,5 @@
 package com.android.cleanarchitecture.presentation.quotes
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
@@ -10,21 +9,20 @@ import androidx.lifecycle.lifecycleScope
 import com.android.cleanarchitecture.R
 import com.android.cleanarchitecture.data.randomQuotes.model.RandomQuotesResponse
 import com.android.cleanarchitecture.databinding.ActivityQuotesBinding
-import com.android.cleanarchitecture.util.extension.showToast
+import com.android.cleanarchitecture.presentation.base.BaseActivity
+import com.android.cleanarchitecture.utils.extension.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
-class RandomQuotesActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivityQuotesBinding
-    private val viewModel: QuotesViewModel by viewModels()
+class RandomQuotesActivity : BaseActivity<ActivityQuotesBinding, QuotesViewModel>() {
+    private val randomQuotesViewModel: QuotesViewModel by viewModels()
+    override fun getViewBinding() = ActivityQuotesBinding.inflate(layoutInflater)
+    override fun getViewModel() = randomQuotesViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityQuotesBinding.inflate(layoutInflater)
-        setContentView(binding.root)
         setup()
     }
 
@@ -32,11 +30,11 @@ class RandomQuotesActivity : AppCompatActivity() {
         initListener()
         initObserve()
         initListener()
-        viewModel.getRandomQuotes()
+        randomQuotesViewModel.getRandomQuotes()
     }
 
     private fun initObserve() {
-        viewModel.mState.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+        randomQuotesViewModel.mState.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
             .onEach { state -> handleStateChange(state) }.launchIn(lifecycleScope)
     }
 
@@ -55,27 +53,27 @@ class RandomQuotesActivity : AppCompatActivity() {
 
     private fun setResponse(response: RandomQuotesResponse?) {
 //        pref.saveQuotes(response?.content)
-        binding.txvQuotes.text = getString(R.string.quotes, response?.content)
-        binding.txvAuthor.text = getString(R.string.author_name, response?.author)
+        binding?.txvQuotes?.text = getString(R.string.quotes, response?.content)
+        binding?.txvAuthor?.text = getString(R.string.author_name, response?.author)
 //        Log.d("cm", pref.getQuotes())
     }
 
     private fun handleLoading(loading: Boolean) {
         if (loading) {
-            binding.txvQuotes.visibility = View.GONE
-            binding.txvAuthor.visibility = View.GONE
-            binding.prbQuotes.visibility = View.VISIBLE
+            binding?.txvQuotes?.visibility = View.GONE
+            binding?.txvAuthor?.visibility = View.GONE
+            binding?.prbQuotes?.visibility = View.VISIBLE
         } else {
-            binding.prbQuotes.visibility = View.GONE
-            binding.txvQuotes.visibility = View.VISIBLE
-            binding.txvAuthor.visibility = View.VISIBLE
+            binding?.prbQuotes?.visibility = View.GONE
+            binding?.txvQuotes?.visibility = View.VISIBLE
+            binding?.txvAuthor?.visibility = View.VISIBLE
         }
     }
 
     private fun initListener() {
-        binding.apply {
+        binding?.apply {
             imvReload.setOnClickListener {
-                viewModel.getRandomQuotes()
+                randomQuotesViewModel.getRandomQuotes()
             }
         }
     }

@@ -4,7 +4,6 @@ import com.android.cleanarchitecture.data.common.network.ApiService
 import com.android.cleanarchitecture.data.common.utils.WrappedResponse
 import com.android.cleanarchitecture.data.login.remote.dto.LoginRequest
 import com.android.cleanarchitecture.data.login.remote.dto.LoginResponse
-import com.android.cleanarchitecture.domain.base.BaseResult
 import com.android.cleanarchitecture.domain.login.repository.LoginRepository
 import com.android.cleanarchitecture.domain.login.model.LoginEntity
 import com.google.gson.Gson

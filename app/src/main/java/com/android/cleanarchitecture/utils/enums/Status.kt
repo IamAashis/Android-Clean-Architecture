@@ -1,4 +1,4 @@
-package com.android.cleanarchitecture.util.enums
+package com.android.cleanarchitecture.utils.enums
 
 /**
  * Created by Aashis on 05,December,2023

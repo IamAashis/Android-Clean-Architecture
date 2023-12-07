@@ -1,6 +1,6 @@
 package com.android.cleanarchitecture.data.common.utils.extensions
 
-import com.android.cleanarchitecture.util.SharedPrefs
+import com.android.cleanarchitecture.utils.SharedPrefs
 import okhttp3.Interceptor
 import okhttp3.Response
 
