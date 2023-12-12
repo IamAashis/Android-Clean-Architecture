@@ -3,10 +3,9 @@ package com.android.cleanarchitecture.presentation.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.cleanarchitecture.R
-import com.android.cleanarchitecture.data.common.utils.WrappedResponse
-import com.android.cleanarchitecture.data.login.remote.dto.LoginRequest
-import com.android.cleanarchitecture.data.login.remote.dto.LoginResponse
-import com.android.cleanarchitecture.domain.login.model.LoginEntity
+import com.android.cleanarchitecture.data.login.model.request.LoginRequest
+import com.android.cleanarchitecture.data.login.model.request.LoginResponse
+import com.android.cleanarchitecture.domain.base.BaseResponse
 import com.android.cleanarchitecture.domain.login.usecase.LoginUseCase
 import com.android.cleanarchitecture.utils.extension.isEmail
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,6 +20,7 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(private val loginUseCase: LoginUseCase) : ViewModel() {
 
     private val state = MutableStateFlow<LoginActivityState>(LoginActivityState.Init)
+
     val mState: StateFlow<LoginActivityState> get() = state
 
     private fun setLoading() {
@@ -48,10 +48,10 @@ class LoginViewModel @Inject constructor(private val loginUseCase: LoginUseCase)
                     }.collect { baseResult ->
                         hideLoading()
                         when (baseResult) {
-                            is BaseResult.Error -> state.value =
-                                LoginActivityState.ErrorLogin(baseResult.rawResponse)
+                            is BaseResponse.Error -> state.value =
+                                LoginActivityState.ErrorLogin(baseResult.data)
 
-                            is BaseResult.Success -> state.value =
+                            is BaseResponse.Success -> state.value =
                                 LoginActivityState.SuccessLogin(baseResult.data)
 
                             else -> {}
@@ -80,9 +80,9 @@ sealed class LoginActivityState {
     object Init : LoginActivityState()
     data class IsLoading(val isLoading: Boolean) : LoginActivityState()
     data class ShowToast(val message: String) : LoginActivityState()
-    data class SuccessLogin(val loginEntity: LoginEntity?) : LoginActivityState()
+    data class SuccessLogin(val loginEntity: LoginResponse?) : LoginActivityState()
     data class ShowLoginError(val errorField: String, val errorMessage: Int) :
         LoginActivityState()
 
-    data class ErrorLogin(val rawResponse: WrappedResponse<LoginResponse>) : LoginActivityState()
+    data class ErrorLogin(val rawResponse: LoginResponse?) : LoginActivityState()
 }

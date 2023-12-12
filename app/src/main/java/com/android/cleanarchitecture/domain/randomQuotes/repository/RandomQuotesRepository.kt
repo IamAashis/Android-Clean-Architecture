@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 /**
  * Created by Aashis on 05,December,2023
  */
-interface RandomQuotesRepository  {
+interface RandomQuotesRepository {
     suspend fun getRandomQuotes(): Flow<BaseResponse<List<RandomQuotesResponse>>>
-
+    suspend fun getParallelQuotes(): Flow<BaseResponse<List<RandomQuotesResponse>>>
 }

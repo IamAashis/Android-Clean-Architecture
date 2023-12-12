@@ -37,13 +37,11 @@ class QuotesViewModel @Inject constructor(private val randomQuotesUseCase: Rando
 
     fun getRandomQuotes() {
         viewModelScope.launch {
-            randomQuotesUseCase.execute()
-                .onStart {
+            randomQuotesUseCase.execute().onStart {
                     setLoading()
                 }.catch {
                     showToast(it.message.toString())
                     hideLoading()
-
                 }.collect { response ->
                     hideLoading()
                     when (response) {
@@ -54,9 +52,33 @@ class QuotesViewModel @Inject constructor(private val randomQuotesUseCase: Rando
                             QuotesActivityState.ResponseData(response.data?.get(0))
 
                         else -> {
+
                         }
                     }
                 }
+        }
+    }
+
+    fun getRandomQuotes2() {
+        viewModelScope.launch {
+            randomQuotesUseCase.executeParallel().onStart {
+                setLoading()
+            }.catch {
+                showToast(it.message.toString())
+                hideLoading()
+            }.collect { response ->
+                hideLoading()
+                when (response) {
+                    is BaseResponse.Error -> performActionOnException(response.throwable) {}
+//                         state.value =   QuotesActivityState.ShowError(response.data)
+
+                    is BaseResponse.Success -> state.value =
+                        QuotesActivityState.ResponseData(response.data?.get(0))
+
+                    else -> {
+                    }
+                }
+            }
         }
     }
 }

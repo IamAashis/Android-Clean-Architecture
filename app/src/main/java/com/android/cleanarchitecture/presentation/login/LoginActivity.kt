@@ -6,12 +6,9 @@ import androidx.activity.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import com.android.cleanarchitecture.data.common.utils.WrappedResponse
-import com.android.cleanarchitecture.data.login.remote.dto.LoginRequest
-import com.android.cleanarchitecture.data.login.remote.dto.LoginResponse
+import com.android.cleanarchitecture.data.login.model.request.LoginRequest
+import com.android.cleanarchitecture.data.login.model.request.LoginResponse
 import com.android.cleanarchitecture.databinding.ActivityLoginBinding
-import com.android.cleanarchitecture.domain.login.model.LoginEntity
-import com.android.cleanarchitecture.utils.extension.showAlertDialog
 import com.android.cleanarchitecture.utils.extension.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -63,12 +60,12 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-    private fun handleSuccess(loginEntity: LoginEntity?) {
+    private fun handleSuccess(loginEntity: LoginResponse?) {
 
     }
 
-    private fun handleErrors(rawResponse: WrappedResponse<LoginResponse>) {
-        showAlertDialog(rawResponse.message)
+    private fun handleErrors(rawResponse: LoginResponse?) {
+//        showAlertDialog(rawResponse)
     }
 
     private fun initListener() {

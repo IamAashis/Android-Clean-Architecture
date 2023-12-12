@@ -1,4 +1,4 @@
-package com.android.cleanarchitecture.data.login.remote.dto
+package com.android.cleanarchitecture.data.login.model.request
 
 /**
  * Created by Aashis on 04,December,2023

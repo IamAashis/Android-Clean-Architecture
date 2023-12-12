@@ -73,7 +73,8 @@ class RandomQuotesActivity : BaseActivity<ActivityQuotesBinding, QuotesViewModel
     private fun initListener() {
         binding?.apply {
             imvReload.setOnClickListener {
-                randomQuotesViewModel.getRandomQuotes()
+//                randomQuotesViewModel.getRandomQuotes()
+                randomQuotesViewModel.getRandomQuotes2()
             }
         }
     }

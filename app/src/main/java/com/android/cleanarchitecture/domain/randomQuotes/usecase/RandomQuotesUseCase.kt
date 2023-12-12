@@ -13,4 +13,8 @@ class RandomQuotesUseCase @Inject constructor(private val repository: RandomQuot
     suspend fun execute(): Flow<BaseResponse<List<RandomQuotesResponse>>> {
         return repository.getRandomQuotes()
     }
+
+    suspend fun executeParallel(): Flow<BaseResponse<List<RandomQuotesResponse>>> {
+        return repository.getParallelQuotes()
+    }
 }

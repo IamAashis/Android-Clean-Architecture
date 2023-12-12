@@ -35,7 +35,6 @@ abstract class BaseRepository {
                 } else {
                     Throwable(errorMessages[0].detail)
                 }
-
             } else {
                 getDefaultError()
             }
