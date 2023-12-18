@@ -58,6 +58,8 @@ abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel> : Fragment() {
                 showMessageDialog(state.errorEnum, state.okActionValue)
             }
 
+            is BaseState.ShowToast -> {}
+
             is BaseState.OkAction -> {}
         }
     }

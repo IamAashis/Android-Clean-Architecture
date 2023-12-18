@@ -11,4 +11,12 @@ import kotlinx.coroutines.flow.Flow
 interface RandomQuotesRepository {
     suspend fun getRandomQuotes(): Flow<BaseResponse<List<RandomQuotesResponse>>>
     suspend fun getParallelQuotes(): Flow<BaseResponse<List<RandomQuotesResponse>>>
+
+    //    suspend fun getQuotesWithJobs(): BaseResponse<List<RandomQuotesResponse>>
+    suspend fun getAsyncDataUsingChannelFlow(): Flow<BaseResponse<List<RandomQuotesResponse>>>
+
+    suspend fun fetchMultipleData(
+        result: suspend (randomQuotesResponse: BaseResponse<List<RandomQuotesResponse>>) -> Unit,
+        error: suspend (checkout: String) -> Unit,
+    )
 }

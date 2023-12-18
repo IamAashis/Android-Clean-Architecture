@@ -1,6 +1,7 @@
 package com.android.cleanarchitecture.presentation.base
 
 import androidx.lifecycle.ViewModel
+import com.android.cleanarchitecture.presentation.quotes.QuotesActivityState
 import com.android.cleanarchitecture.utils.enums.ErrorEnum
 import com.android.cleanarchitecture.utils.exceptions.UnAuthorizedException
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +14,7 @@ import java.net.UnknownHostException
  */
 abstract class BaseViewModel : ViewModel() {
 
-    private val bstate = MutableStateFlow<BaseState>(BaseState.Init)
+    val bstate = MutableStateFlow<BaseState>(BaseState.Init)
     val mbState: StateFlow<BaseState> get() = bstate
 
     private fun setError(errorEnum: ErrorEnum?, okAction: () -> Unit?) {
@@ -51,4 +52,6 @@ sealed class BaseState {
     data class OkAction(val message: String) : BaseState()
     data class OnErrorEnumResponse(val errorEnum: ErrorEnum?, val okActionValue: () -> Unit?) :
         BaseState()
+
+    data class ShowToast(val message: String) : BaseState()
 }

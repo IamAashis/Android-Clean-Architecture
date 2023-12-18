@@ -2,7 +2,6 @@ package com.android.cleanarchitecture.data.randomQuotes.repository
 
 import android.util.Log
 import com.android.cleanarchitecture.data.common.network.ApiService
-import com.android.cleanarchitecture.data.randomQuotes.model.RandomQuotesOnlyResponse
 import com.android.cleanarchitecture.data.randomQuotes.model.RandomQuotesResponse
 import com.android.cleanarchitecture.domain.base.BaseResponse
 import com.android.cleanarchitecture.domain.randomQuotes.repository.RandomQuotesRepository
@@ -10,11 +9,12 @@ import com.android.cleanarchitecture.presentation.base.BaseRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import retrofit2.Response
 import javax.inject.Inject
 
 /**
@@ -22,6 +22,7 @@ import javax.inject.Inject
  */
 class RandomQuotesRepositoryImpl @Inject constructor(private val apiService: ApiService) :
     RandomQuotesRepository, BaseRepository() {
+
     override suspend fun getRandomQuotes(): Flow<BaseResponse<List<RandomQuotesResponse>>> {
         return flow {
             try {
@@ -44,56 +45,85 @@ class RandomQuotesRepositoryImpl @Inject constructor(private val apiService: Api
         }
     }
 
-    /* override suspend fun getParallelQuotes(): Flow<BaseResponse<List<RandomQuotesResponse>>> {
-         return flow {
-             try {
-                 CoroutineScope(Dispatchers.IO).launch {
-                     val response1 = async { apiService.randomQuotes() }
-                     val response2 = async { apiService.randomQuotes2("https://api.kanye.rest/") }
-
-                     val responseOne = response1.await()
-                     val responseTwo = response2.await()
-
-                     Log.d("cm", "Here it is" + responseOne.toString() + responseTwo.toString())
-
-                     if (responseOne.isSuccessful && responseTwo.isSuccessful) {
-
-                     }
-                 }
-
-             } catch (e: Exception) {
-
-             }
-         }
-     }*/
-
-    override suspend fun getParallelQuotes(): Flow<BaseResponse<List<RandomQuotesResponse>>> {
-        return flow {
+    override suspend fun fetchMultipleData(
+        result: suspend (randomQuotesResponse: BaseResponse<List<RandomQuotesResponse>>) -> Unit,
+        error: suspend (checkout: String) -> Unit
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
             try {
-                withContext(Dispatchers.IO) {
-                    val response2 = async { apiService.randomQuotes2("https://api.kanye.rest/") }
+                val response2 = async { apiService.randomQuotes2("https://api.kanye.rest/") }
 
-                    val responseOne = response2.await()
+                val responseTwo = response2.await()
 
-                    Log.d("cm", "Here it is" + response2.toString())
-
-                    if (responseOne.isSuccessful) {
-                        try {
-                            val response1 = apiService.randomQuotes()
-                            Log.d("cm", "Here it is" + response1.toString())
-                            emit(BaseResponse.Success(response1.body()))
-
-                        } catch (e: Exception) {
-                            Log.d("cm", "Here it is" + e.toString())
-                        }
-                    }
-//                    val responseTwo = response2.await()
+                if (responseTwo.isSuccessful) {
+                    val response1 = apiService.randomQuotes()
+                    result(BaseResponse.Success(response1.body()))
                 }
             } catch (e: Exception) {
-                Log.d("cm", "Here it is" + e.toString())
+                Log.d("cm", "in catch section" + e.toString())
             }
         }
     }
+
+    override suspend fun getParallelQuotes(): Flow<BaseResponse<List<RandomQuotesResponse>>> {
+        return flow {
+            coroutineScope {
+                try {
+                    val response2 =
+                        async(Dispatchers.IO) { apiService.randomQuotes2("https://api.kanye.rest/") }
+
+                    val responseTwo = response2.await()
+
+                    if (responseTwo.isSuccessful) {
+                        val response1 = apiService.randomQuotes()
+                        emit(BaseResponse.Success(response1.body()))
+//                        send(BaseResponse.Success(response1.body()))
+                    }
+                } catch (e: Exception) {
+                    Log.d("cm", "in catch section" + e.toString())
+                }
+            }
+        }
+    }
+
+    /*  override suspend fun getAsyncQuotes(): Flow<BaseResponse<List<RandomQuotesResponse>>> {
+          return flow {
+              try {
+                  CoroutineScope(Dispatchers.IO).launch {
+                      val response2 = async { apiService.randomQuotes2("https://api.kanye.rest/") }
+
+                      val responseOneTest = response2.await()
+
+                      if (responseOneTest.isSuccessful) {
+                          val response1 = apiService.randomQuotes()
+
+                          emit(BaseResponse.Success(response1.body()))
+                      }
+                  }
+              } catch (e: Exception) {
+                  emit(BaseResponse.Error(getError(e)))
+              }
+          }
+      }*/
+
+    override suspend fun getAsyncDataUsingChannelFlow(): Flow<BaseResponse<List<RandomQuotesResponse>>> =
+        channelFlow {
+            try {
+                val response2 = async { apiService.randomQuotes2("https://api.kanye.rest/") }
+
+                val responseOneTest = response2.await()
+
+                if (responseOneTest.isSuccessful) {
+                    val response1 = apiService.randomQuotes()
+
+                    send(BaseResponse.Success(response1.body()))
+                }
+                close() // Close the channel after sending the value
+            } catch (e: Exception) {
+                send(BaseResponse.Error(getError(e)))
+                close(e) // Close the channel with an exception if an error occurs
+            }
+        }.flowOn(Dispatchers.IO)
 
     suspend fun getApiCallAsync() {
 

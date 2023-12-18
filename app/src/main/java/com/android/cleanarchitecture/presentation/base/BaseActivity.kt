@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.viewbinding.ViewBinding
 import com.android.cleanarchitecture.R
 import com.android.cleanarchitecture.utils.enums.ErrorEnum
+import com.android.cleanarchitecture.utils.extension.showToast
 import com.android.cleanarchitecture.utils.util.DialogUtils
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -46,6 +47,8 @@ abstract class BaseActivity<VB : ViewBinding, BVM : BaseViewModel> : AppCompatAc
             is BaseState.OnErrorEnumResponse -> {
                 showMessageDialog(state.errorEnum, state.okActionValue)
             }
+
+            is BaseState.ShowToast -> showToast(state.message)
 
             is BaseState.OkAction -> {}
         }

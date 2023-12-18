@@ -1,6 +1,7 @@
 package com.android.cleanarchitecture.presentation.quotes
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Lifecycle
@@ -17,6 +18,7 @@ import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
 class RandomQuotesActivity : BaseActivity<ActivityQuotesBinding, QuotesViewModel>() {
+
     private val randomQuotesViewModel: QuotesViewModel by viewModels()
     override fun getViewBinding() = ActivityQuotesBinding.inflate(layoutInflater)
     override fun getViewModel() = randomQuotesViewModel
@@ -41,10 +43,13 @@ class RandomQuotesActivity : BaseActivity<ActivityQuotesBinding, QuotesViewModel
     private fun handleStateChange(state: QuotesActivityState) {
         when (state) {
             is QuotesActivityState.Init -> Unit
-            is QuotesActivityState.ShowToast -> showToast(state.message)
             is QuotesActivityState.IsLoading -> handleLoading(state.isLoading)
             is QuotesActivityState.ResponseData -> {
                 setResponse(state.response)
+            }
+
+            is QuotesActivityState.ResponseDataTestJob -> {
+                Log.d("cm", "ModelResponse" + state.responseJobs)
             }
 
             else -> {}
@@ -75,6 +80,8 @@ class RandomQuotesActivity : BaseActivity<ActivityQuotesBinding, QuotesViewModel
             imvReload.setOnClickListener {
 //                randomQuotesViewModel.getRandomQuotes()
                 randomQuotesViewModel.getRandomQuotes2()
+//                randomQuotesViewModel.getQuotesUsingAsync()
+//                randomQuotesViewModel.getQuotesHere()
             }
         }
     }
